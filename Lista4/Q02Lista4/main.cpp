@@ -49,7 +49,7 @@ int quickfind(int *vec, int inicio, int final, int indice_buscado){
 int main()
 {
     int vec[8] = {7, 1, 3, 10, 17, 2, 21, 9};
-    int tam_vec = 8, resultado, k=9;
+    int tam_vec = 8, resultado, k=4;
 
     resultado = quickfind(vec,0,tam_vec-1, k);
 

@@ -15,7 +15,17 @@ void insertionSortRec(int *vec, int n){
         j = j - 1;
     }
     vec[j + 1] = chave;
+    return;
 }
+//T(1) = 2
+//T(2) = 1 + T(1) + 2+ sumj=1 ate 1 (2+2) + 2
+//T(3) = 1 + T(2) + 2+ sumj=1 ate 2 (2+2) + 2
+//     = 1 + [ 1 + T(1) + 2 + sumj=1 ate 1 (2+2) + 2 ] + 2 + sumj=1 ate 2 (2+2) + 2
+//     = (3 - 1) + (4*(3-1)) + T(1) + sumj=1 ate (3-1) (4*(3-j))
+
+
+//T(n) = 1 + T(n-1) + 2 + sumj=1 ate n-1 (2+2) + 2
+
 
 int main()
 {

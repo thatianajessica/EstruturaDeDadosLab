@@ -1,12 +1,12 @@
 #include <iostream>
 
 using namespace std;
-
+                        //0           //2       //4
 void merge(int *vec, int inicio, int meio, int final){
-    int n1 = meio - inicio + 1;//numero de elementos na parte da esquerda
-    int n2 = final - meio;//numero de elementos no vetor da direita
-    int *parteEsquerda = new int[n1+1];
-    int *parteDireita = new int[n2+1];
+    int n1 = meio - inicio + 1;//3 numero de elementos na parte da esquerda
+    int n2 = final - meio;// 2 numero de elementos no vetor da direita
+    int *parteEsquerda = new int[n1+1];//4 = 0...3
+    int *parteDireita = new int[n2+1];//3 = 0...2
 
     for(int i = 0; i < n1; i++){
         parteEsquerda[i] = vec[inicio+i];
