@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
         vec[i] = numero;
     }
 
-    for(int i = 0; i <= tam_vec - 2; i++){
+    for(int i = 0; i < tam_vec - 1; i++){
         for( int j = 0; j < tam_vec - i; j++){
             if(vec[j] > vec[j+1]){
                 aux = vec[j];

@@ -64,7 +64,7 @@ bool encontraSomaDois( int *vec, int tam_vec, int valor){
     for (int i = 0; i < tam_vec; i++) {
         aux_vec[i] = vec[i];
     }
-
+    //tem q ser na realidade o mergesort pq eh nlogn
     quicksort(aux_vec,0,tam_vec-1);
 
     for (int i = 0; i < tam_vec; i++) {
