@@ -294,6 +294,42 @@ void printLista(No *cabeca) {
 //    cabeca =
 //}
 
+int buscaDuplamente(Lista *lista, int chave){
+    No *aux = lista->cabeca;
+    if(lista->cabeca->chave == chave){
+        return 0;
+    }else{
+        for (int i = 0; i < lista->n - 1; i++) {
+            aux = aux->prox;
+            if(aux->chave == chave){
+                return i+1;
+            }
+        }
+    }
+    return -1;
+}
+
+void removerNoComBusca(Lista *lista, int chave){
+    int indice_remover = buscaDuplamente(lista,chave);
+    if(indice_remover == -1){
+        cout <<"Elemento nao existe na lista"<<endl;
+    }else{
+        if(indice_remover == 0){
+            removerCabeca(lista);
+        }else if(indice_remover==lista->n-1){
+            removerCauda(lista);
+        }else{
+            No *aux = lista->cabeca;
+            for (int i = 0; i < indice_remover-1; i++){
+                aux = aux->prox;
+            }
+            aux->prox->prox->ant = aux;
+            aux->prox = aux->prox->prox;
+            lista->n -= 1;
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -412,6 +448,13 @@ int main(int argc, char *argv[])
         No *novo_no =  criarNo(20);
         cout << "##################" <<endl;
         inserirNoN(lista4,3,novo_no);
+        printarLista2(lista4);
+
+        int busca = buscaDuplamente(lista4,3);
+        cout << "Indice do elemento = " <<busca << endl;
+
+        removerNoComBusca(lista4,1);
+        cout << "##################" <<endl;
         printarLista2(lista4);
 
 
