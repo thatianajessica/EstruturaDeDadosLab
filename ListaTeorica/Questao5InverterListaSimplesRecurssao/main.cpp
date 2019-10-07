@@ -146,22 +146,71 @@ Lista* inverteLista(Lista *lista){
     }
 }
 
-No* inverteListaRecurssao(No *cabeca){
-    No *aux1 = NULL, *aux2 = NULL;
+No* inverteListaRecurssao(No *cabeca, Lista *lista){
+    No *p = NULL;
+    No *q = NULL;
     if(cabeca == NULL){
         return NULL;
     }
-    if(aux2 == cabeca){
+    p = cabeca;
+    q = p->prox;
+
+    if(q == NULL){
+        lista->cabeca = p;
         return NULL;//se tiver chegado ao ultimo no, ai o aux2 prox vai apontar pra cabeca, acabou a lista
     }
-    aux1 = cabeca;
-    aux2 = aux1->prox;
-    aux2 = inverteListaRecurssao(aux2);
-    //manipulacao dos ponteiros pra poder apontar revertendo
-    aux1 = aux1->prox->prox;
-    aux1->prox = NULL;
-    return aux2;
+    q = inverteListaRecurssao(q, lista);
+    p->prox->prox = p;
+    p->prox = NULL;
+    return q;
 }
+
+No* inverteListaRecurssao2(No *cabeca, Lista *lista){
+    if(cabeca == NULL){
+        return NULL;
+    }
+    if(cabeca->prox == lista->cabeca)
+    {
+        //lista->cabeca->prox = cabeca->prox;
+        lista->cabeca = cabeca;
+        return NULL;//se tiver chegado ao ultimo no, ai o aux2 prox vai apontar pra cabeca, acabou a lista
+    }
+
+    No *p = NULL;
+    No *q = NULL;
+
+    p = cabeca;
+    q = p->prox;
+
+
+    q = inverteListaRecurssao2(q,lista);
+    p->prox->prox = p;
+    p->prox = NULL;
+    return q;
+}
+
+No* inverteListaRecurssao3(No *cabeca, No *aux){
+    if(cabeca == NULL){
+        return NULL;
+    }
+    if(cabeca->prox == aux)
+    {
+        return cabeca;//se tiver chegado ao ultimo no, ai o aux2 prox vai apontar pra cabeca, acabou a lista
+    }
+
+    No *p = NULL;
+    No *q = NULL;
+
+    p = cabeca;
+    q = p->prox;
+
+
+    q = inverteListaRecurssao3(q,aux);
+    p->prox->prox = p;
+    p->prox = NULL;
+    return q;
+}
+
 
 void printarLista(Lista *lista){
     if(lista->n > 0);
@@ -176,6 +225,32 @@ void printarLista(Lista *lista){
     cout << endl;
 }
 
+void apagarCircularidade(Lista *lista)
+{
+    if (lista->cabeca == NULL){
+        return;
+    }else{
+        No *cauda = lista->cabeca;
+        for (int i = 0 ; i < ((lista->n)-1); i++) {
+            cauda = cauda->prox;
+        }
+        cauda->prox = NULL;
+    }
+}
+
+void criarCircularidade(Lista *lista)
+{
+    if (lista->cabeca == NULL){
+        return ;
+    }else{
+        No *cauda = lista->cabeca;
+        for (int i = 0 ; i < ((lista->n)-1); i++) {
+            cauda = cauda->prox;
+        }
+        cauda->prox = lista->cabeca;
+    }
+}
+
 void printarListaRecebendoNo(No *cabeca){
     No *aux = cabeca;
     while(aux->prox != cabeca)
@@ -186,32 +261,23 @@ void printarListaRecebendoNo(No *cabeca){
     cout << endl;
 }
 
+
 int main()
 {
         No *no1 = criarNo(1);
         No *no2 = criarNo(2);
         No *no3 = criarNo(3);
         No *no4 = criarNo(4);
-        No *no5 = criarNo(5);
-        No *no6 = criarNo(6);
-        No *no7 = criarNo(7);
+
 
         Lista *lista1 = criarListaVazia();
         printarLista(lista1);
 
         adicionaListaCauda(lista1,no1);
-        printarLista(lista1);
         adicionaListaCauda(lista1,no2);
-        printarLista(lista1);
         adicionaListaCauda(lista1,no3);
-        printarLista(lista1);
         adicionaListaCauda(lista1,no4);
-        printarLista(lista1);
-        adicionaListaCauda(lista1,no5);
-        printarLista(lista1);
-        adicionaListaCauda(lista1,no6);
-        printarLista(lista1);
-        adicionaListaCauda(lista1,no7);
+
         cout <<"Lista 1" << endl;
         printarLista(lista1);
 
@@ -222,21 +288,37 @@ int main()
         cout <<"Lista 1" << endl;
         printarLista(lista1);
 
-//        cout <<"#########################" <<endl;//com pilha, ta O(n)
-//        Lista *lista3 = criarListaVazia();
-//        lista3 = inverteLista(lista1);
-//        cout <<"Lista invertida" << endl;
-//        printarLista(lista3);
-//        cout <<"Lista original" << endl;
-//        printarLista(lista1);
+
 
         cout <<"#########################" <<endl;//com recurssao
-        No *cabeca_invertida = inverteListaRecurssao(lista1->cabeca);
-        cout <<"Lista invertida" << endl;
-        printarListaRecebendoNo(cabeca_invertida);
-        cout <<"Lista original" << endl;
+
+        // abordagem 1
+        /////////
+        // apagarCircularidade(lista1);
+        // inverteListaRecurssao(lista1->cabeca, lista1);
+        // criarCircularidade(lista1);
+        ////////
+
+        // abordagem 2
+        ///////////
+        inverteListaRecurssao2(lista1->cabeca, lista1);
+        // ///////////
+
         printarLista(lista1);
 
+        // abordagem 3 - ta errada
+        ///////////
+        //No *aux = lista1->cabeca;
+        //inverteListaRecurssao3(lista1->cabeca, aux);
+        // ///////////
+
+        //printarLista(lista1);
+
+        //cout <<"Lista invertida" << endl;
+        //cout << cabeca_invertida->chave << endl;
+        //printarListaRecebendoNo(cabeca_invertida);
+        //cout <<"Lista original" << endl;
+        //printarLista(lista1);
 
 
     return 0;
