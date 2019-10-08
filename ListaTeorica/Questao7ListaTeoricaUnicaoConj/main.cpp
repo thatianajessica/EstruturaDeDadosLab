@@ -31,6 +31,8 @@ Lista* criarListaVazia(){
 void adicionaListaCauda(Lista *lista, No *no_adc){
     if (lista->cabeca == NULL){
         lista->cabeca = no_adc;
+        lista->cabeca->prox = lista->cabeca;
+        lista->cabeca->ant = lista->cabeca;
     }else{
         No *cauda = lista->cabeca;
         for (int i = 0 ; i < ((lista->n)-1); i++) {
@@ -38,6 +40,8 @@ void adicionaListaCauda(Lista *lista, No *no_adc){
         }
         no_adc->ant = cauda;
         cauda->prox = no_adc;
+        no_adc->prox = lista->cabeca;
+        lista->cabeca->ant = no_adc;
     }
     lista->n += 1;
 }
@@ -62,14 +66,15 @@ void adicionaListaCabeca(Lista *lista, No *no_adc){
         for (int cont = 0; cont < lista->n-1; cont++) {
             aux = aux->prox;
         }
+        aux->prox = no_adc;
         lista->cabeca->ant = no_adc;
         no_adc->prox = lista->cabeca;
+        no_adc->ant = aux;
         lista->cabeca = no_adc;
 
     }
     lista->n += 1;
 }
-
 void printarLista(Lista *lista){
     if(lista->n > 0);
     {
@@ -103,22 +108,8 @@ void printarLista2(Lista *lista){
     cout << endl;
 }
 
-No* removerCabeca(Lista *lista){
-    No *aux = lista->cabeca;
-    if(lista->n == 0 ){
-        return NULL;
-    }else if(lista->n == 1){
-        lista->cabeca = NULL;
-        lista->n -=1;
-    }else{
-        lista->cabeca = lista->cabeca->prox;
-        lista->n -= 1;
-    }
-    return aux;
-}
-
 Lista* concatenarListas(Lista* l1, Lista* l2){
-    Lista* l3 = NULL;
+    Lista* l3 = criarListaVazia();
     if(l1->cabeca == NULL && l2->cabeca == NULL){
         return NULL;
     }else if(l1->cabeca == NULL){
@@ -127,15 +118,11 @@ Lista* concatenarListas(Lista* l1, Lista* l2){
         l3 = l1;
     }
     else if(l1->cabeca != NULL && l2->cabeca != NULL){
-        while(aux != NULL && aux2 != NULL){
-            No *aux1 = l1->cabeca;
-            No *aux2 = l2->cabeca;
-            if(aux2->chave != aux )
-        }
-
-
-
-
+        l3 = l1;
+        l3->cabeca->ant->prox = l2->cabeca;
+        l3->cabeca->ant = l2->cabeca->ant;
+        l2->cabeca->ant->prox = l3->cabeca;
+        l3->n += l2->n;
     return l3;
     }
 }
