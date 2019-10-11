@@ -12,13 +12,14 @@ typedef struct _No_Tree
 
     struct _No_Tree *left;
     struct _No_Tree *right;
-    int m;
 }NoTree;
 
 typedef struct _No_Stack
 {
     // estudar depois templates em C++
     _No_Tree *chave_tree;
+    int chave_int;
+
     _No_Stack *next;
 }No_Stack;
 
@@ -39,7 +40,15 @@ NoTree* createNoTree(char c)
     no->chave_char = c;
     no->left = NULL;
     no->right = NULL;
-    no->m = 0;
+    return no;
+}
+
+NoTree* createNoTree2(int v)
+{
+    NoTree* no = new NoTree;
+    no->chave_int = v;
+    no->left = NULL;
+    no->right = NULL;
     return no;
 }
 
@@ -67,12 +76,18 @@ void empilhar(Pilha* p, No_Stack* no){
 void empilhar2(Pilha* p, NoTree* not_t){
     No_Stack*  no_s = new No_Stack;
     no_s->chave_tree = not_t;
-    no_s->chave_tree->m += 1;
+    empilhar(p, no_s);
+}
+
+void empilhar3(Pilha* p, NoTree* not_t, int v){
+    No_Stack*  no_s = new No_Stack;
+    no_s->chave_tree = not_t;
+    no_s->chave_int = v;
     empilhar(p, no_s);
 }
 
 
-_No_Stack* desempilhar(Pilha* p)
+_No_Stack* desimpilhar(Pilha* p)
 {
     if(p != NULL)
     {
@@ -99,35 +114,67 @@ Arvore* criarArvoreVazia(){
 }
 
 
-void PosOrdemIterativo(_No_Tree *no_raiz){
+void preOrdemIterativo(_No_Tree *no_raiz){
+    Pilha *p = criarPilhaVazia();
+    bool fim = false;
+    while(fim == false)
+    {
+        if(no_raiz != NULL)
+        {
+            cout << no_raiz->chave_char << " ";
+            if(no_raiz->right != NULL) empilhar2(p, no_raiz->right);
+            no_raiz = no_raiz->left;
+        }
+        else
+        {
+            if(p->topo == NULL){
+                fim = true;
+            }
+            else{
+                _No_Stack* no_s_aux =  desimpilhar(p);
+                no_raiz = no_s_aux->chave_tree;
+            }
+
+        }
+
+    }
+    cout << endl;
+}
+
+void posOrdemIterativo(NoTree *no_raiz){
     Pilha *p = criarPilhaVazia();
     bool sobe = false;
-    do{
+    int m;
 
-        while(no_raiz != NULL)
+    do{
+        while(no_raiz!= NULL)
         {
-            empilhar2(p,no_raiz);
+            empilhar3(p, no_raiz, 1);
             no_raiz = no_raiz->left;
         }
         sobe = true;
-        while(sobe == true && p->topo != NULL)
+        while(sobe==true && p->topo != NULL)
         {
-            _No_Stack* aux = desempilhar(p);
-            no_raiz = aux->chave_tree;
-            if(no_raiz->m == 1){
-                empilhar2(p,no_raiz);
-                no_raiz = no_raiz->right;
-                sobe = false;
-            }
-            if(no_raiz->m == 2){
-                cout << aux->chave_tree->chave_char << " ";
+            _No_Stack* no_s_aux =  desimpilhar(p);
+            no_raiz = no_s_aux->chave_tree;
+            m = no_s_aux->chave_int;
+
+            switch(m)
+            {
+                case 1:
+                    empilhar3(p, no_raiz, 2);
+                    no_raiz = no_raiz->right;
+                    sobe = false;
+                    break;
+                case 2:
+                    cout << no_raiz->chave_char << " ";
+                    break;
+
             }
         }
-    cout << endl;
-    }while(p->topo != NULL);
+    }while(p->topo!=NULL);
+
 }
-
-
 
 
 Arvore* createArvoreExample1()
@@ -146,7 +193,7 @@ Arvore* createArvoreExample1()
 
     connectNodes(noA, noB, noC);
     connectNodes(noB, noD, noH);
-    connectNodes(noD, NULL,noJ);
+    connectNodes(noD, NULL, noJ);
 
     connectNodes(noC, noE, noF);
     connectNodes(noF, noI, NULL);
@@ -155,11 +202,37 @@ Arvore* createArvoreExample1()
 }
 
 
+Arvore* createArvoreExample2()
+{
+    Arvore *arvore = criarArvoreVazia();
+
+    NoTree* no1 = createNoTree2(20);
+    NoTree* no2 = createNoTree2(10);
+    NoTree* no3 = createNoTree2(15);
+    NoTree* no4 = createNoTree2(40);
+    NoTree* no5 = createNoTree2(30);
+    NoTree* no6 = createNoTree2(50);
+    NoTree* no7 = createNoTree2(60);
+
+    connectNodes(no1, no2, no4);
+    connectNodes(no2, NULL, no3);
+    connectNodes(no4, no5, no6);
+    connectNodes(no6, NULL, no7);
+
+
+    arvore->raiz = no1;
+    return arvore;
+}
+
+
+
 
 int main()
 {
-    Arvore* arvore =  createArvoreExample1();
-    PosOrdemIterativo(arvore->raiz);
+    Arvore* arvore1 =  createArvoreExample1();
+    Arvore* arvore2 =  createArvoreExample2();
+
+    posOrdemIterativo(arvore1->raiz);
 
     return 0;
 }
