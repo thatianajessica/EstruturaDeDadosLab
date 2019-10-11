@@ -1,4 +1,8 @@
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
 
 using namespace std;
 
@@ -34,10 +38,7 @@ void adicionaListaCauda(Lista *lista, No *no_adc){
         lista->cabeca->prox = lista->cabeca;
         lista->cabeca->ant = lista->cabeca;
     }else{
-        No *cauda = lista->cabeca;
-        for (int i = 0 ; i < ((lista->n)-1); i++) {
-            cauda = cauda->prox;
-        }
+        No *cauda = lista->cabeca->ant;
         no_adc->ant = cauda;
         cauda->prox = no_adc;
         no_adc->prox = lista->cabeca;
@@ -57,15 +58,12 @@ void adicionaListaCabeca(Lista *lista, No *no_adc){
         no_adc->prox = lista->cabeca;
         no_adc->ant = lista->cabeca;
     }else{
-        No *aux;
-        aux = lista->cabeca;
-        for (int cont = 0; cont < lista->n-1; cont++) {
-            aux = aux->prox;
-        }
-        aux->prox = no_adc;
+        No *cauda = lista->cabeca->ant;
+
+        cauda->prox = no_adc;
         lista->cabeca->ant = no_adc;
         no_adc->prox = lista->cabeca;
-        no_adc->ant = aux;
+        no_adc->ant = cauda;
         lista->cabeca = no_adc;
 
     }
@@ -75,51 +73,75 @@ void adicionaListaCabeca(Lista *lista, No *no_adc){
 void removerNoN(Lista *lista, int no_remover){
         if(no_remover == 0){
             cout<<"Nao pode remover a cabeca da lista" <<endl;
-        }else{
-            No *aux = lista->cabeca;
-            for (int cont = 0; cont < no_remover; cont++) {
+        }else if(no_remover == lista->n){
+            No *aux;
+            aux = lista->cabeca;
+            for (int i = 0; i < lista->n-1; i++) {
                 aux = aux->prox;
             }
-            No *no_ant = aux->ant;
-            No *no_prox = aux->prox;
-            no_ant->prox = no_prox;
-            no_prox->ant = no_ant;
-            lista->n -= 1;
+            aux->prox = lista->cabeca;
+            lista->cabeca->ant = aux;
+            lista->n = lista->n - 1;
+        }else{
+            No *aux = lista->cabeca;
+            for (int cont = 0; cont < no_remover-1; cont++) {
+                aux = aux->prox;
+            }
+            aux->prox = aux->prox->prox;
+            aux->prox->prox->ant = aux;
         }
 }
+
 
 No* criancaVencedora(Lista* lista){
     lista->n -= 1;//para nao contar com a cabeca
     int n_remover = -1;
     while(lista->n > 1){
-        cout << "Qual crianca quer remover?" <<endl;
-        cin >> n_remover;
         while(n_remover < 0){
             cout << "Qual crianca quer remover?" <<endl;
             cin >> n_remover;
         }
-        if(n_remover > lista->n){
-            cout <<"Nó nao pode ser removido.Tente novamente"<<endl;
-        }else{
-            removerNoN(lista,n_remover);
-        }
-
+        removerNoN(lista,n_remover);
     }
     return lista->cabeca->prox;
+}
+
+void brincadeira_de_crianca_como_eh_bom(Lista* lista){
+    int n = lista->n;
+    srand(time(NULL));
+    while(lista->cabeca != lista->cabeca->prox)
+    {
+        int r = (rand() % (n-1)) + 1; // random integer between 1 and n-1
+        No* no_a_ser_apagado = lista->cabeca;
+        for(int i=0; i<r; i++){
+            no_a_ser_apagado = no_a_ser_apagado->prox;
+        }
+        cout << "removendo o no: " << no_a_ser_apagado->chave << endl;
+
+        No* ant = no_a_ser_apagado->ant;
+        No* prox = no_a_ser_apagado->prox;
+        ant->prox = prox;
+        prox->ant = ant;
+        if(no_a_ser_apagado == lista->cabeca)
+        {
+            lista->cabeca = prox;
+        }
+    }
+    cout << "O no vencedor foi: " << lista->cabeca->chave;
 }
 
 
 int main()
 {
-        No* vencedor = NULL;
 
-        No *no1 = criarNo(-1);
-        No *no2 = criarNo(1);
-        No *no3 = criarNo(2);
-        No *no4 = criarNo(3);
-        No *no5 = criarNo(4);
-        No *no6 = criarNo(5);
-        No *no7 = criarNo(6);
+        No *no1 = criarNo(1);
+        No *no2 = criarNo(2);
+        No *no3 = criarNo(3);
+        No *no4 = criarNo(4);
+        No *no5 = criarNo(5);
+        No *no6 = criarNo(6);
+        No *no7 = criarNo(7);
+
 
         Lista *lista1 = criarListaVazia();
 
@@ -131,9 +153,7 @@ int main()
         adicionaListaCauda(lista1,no6);
         adicionaListaCauda(lista1,no7);
 
-        vencedor = criancaVencedora(lista1);
-
-        cout <<"Crianca vencedora:" <<vencedor->chave << endl;
+        brincadeira_de_crianca_como_eh_bom(lista1);
 
     return 0;
 }
