@@ -75,11 +75,11 @@ void printarGrafo(Grafo *grafo){
 
 int main()
 {
-    NoGrafo *no1 =  criarNo(1);
-    NoGrafo *no2 =  criarNo(2);
-    NoGrafo *no3 =  criarNo(3);
-    NoGrafo *no4 =  criarNo(4);
-    NoGrafo *no5 =  criarNo(5);
+    NoGrafo *no1 =  criarNo(0);
+    NoGrafo *no2 =  criarNo(1);
+    NoGrafo *no3 =  criarNo(2);
+    NoGrafo *no4 =  criarNo(3);
+    NoGrafo *no5 =  criarNo(4);
 
     criarAresta(no1, no2);
     criarAresta(no1, no5);
