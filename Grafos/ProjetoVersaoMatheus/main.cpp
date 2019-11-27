@@ -4,7 +4,7 @@ using namespace std;
 //Inês é morta!!!
 
 //Numero de vertices
-const int n=9;
+const int n=11;
 
 //"Infinito"
 const int inf = 99999999;
@@ -35,7 +35,8 @@ void MenorCaminho(int M_distancias[][n],int Class_Vertices[],bool Visitados[],in
 int main(){
 
     //Matriz de adjacencia
-    int M_adj[n][n] = { {0,1,0,0,0,0,0,0,0},
+    int M_adj[n][n] = { {0,1,0,0,0,0,0,0,0}
+                        {0,1,0,0,0,0,0,0,0},
                         {1,0,1,0,0,0,0,0,0},
                         {0,1,0,1,0,0,0,0,0},
                         {0,0,1,0,1,0,0,0,0},
@@ -43,13 +44,16 @@ int main(){
                         {0,0,0,0,1,0,1,1,1},
                         {0,0,0,0,0,1,0,0,0},
                         {0,0,0,0,0,1,0,0,0},
-                        {0,0,0,0,0,1,0,0,0} };
+                        {0,0,0,0,0,1,0,0,0},
+                        {0,0,0,0,0,1,0,0,0}
+                        {0,0,0,0,0,1,0,0,0}
+                        {0,0,0,0,0,1,0,0,0}};
 
     //Matriz contendo as distancias de todos para todos
     int M_distancias[n][n];
 
     //Vetor de classificação dos vertices : 0 -> Vertice Normal ; 1 -> Vertice Fabrica ; 2->Vertice Obra
-    int Class_Vertices[n] = {1,0,0,0,0,0,2,1,2};
+    int Class_Vertices[n] = {2,0,1,0,0,1,0,0,0,2,2,1};
 
     //Vetor de marcação dos vertices visitados
     bool Visitados[n];

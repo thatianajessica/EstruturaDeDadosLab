@@ -1,0 +1,17 @@
+Legenda dos arquivos .in do trabalho de Estrutura de Dados
+
+Linha 1 -> numero de vertices do grafo;
+
+Linha 2 -> 
+	* 1º elemento -> Numero de vertices fabricas;
+	* demais elementos -> rotulo dos vertices fabricas;
+ 
+Linha 3 ->
+	* Similar a linha 2, mas referente a obras;
+	
+Linha 4 ->
+	* Vertice inicial da Heuristica;
+
+Demais linhas ->
+	* Primeiro dois elementos : Par de vertices que possuem uma aresta;
+	* Terceiro elemento : Peso dessa aresta;
