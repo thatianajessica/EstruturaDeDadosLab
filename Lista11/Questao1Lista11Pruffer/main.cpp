@@ -1,4 +1,5 @@
 #include <iostream>
+#define MAX 1000
 
 using namespace std;
 
@@ -35,14 +36,17 @@ void descer(int *vetor_heap,int n, int i){
     }
 }
 
-void remover(int *vetor_heap, int &n){
+int remover(int *vetor_heap, int &n){
+    int raiz_removida = -1;
     if(n>0){
+         raiz_removida = vetor_heap[0];
         vetor_heap[0] = vetor_heap[n-1];
         n = n - 1;
         descer(vetor_heap, n, 0);//removendo sempre a raiz
     }else{
         cout << "Heap vazia" << endl;
     }
+    return raiz_removida;
 }
 
 void subir(int *vetor_heap, int index_elemento){
@@ -116,6 +120,52 @@ void adicionaListaCauda(Lista *lista, int no_index, float peso){
     lista->n += 1;
 }
 
+void removerCauda(Lista *lista){
+    if(lista->n == 0){
+        return;
+    }
+    if (lista->n == 1){
+        lista->cabeca = NULL;
+        lista->n = lista->n - 1;
+    }else{
+        No *aux;
+        aux = lista->cabeca;
+        for (int i = 0; i < lista->n-2; i++) {
+            aux = aux->prox;
+        }
+        aux->prox = NULL;
+        lista->n = lista->n - 1;
+    }
+}
+
+void removerNoListaComChave(Lista *lista, int chave_remover){
+    if(lista->n == 0){
+        cout <<"Lista vazia" <<endl;
+    }else{
+        No *aux = lista->cabeca;
+        No *ant = NULL;
+        while(true){
+            if(lista->cabeca->chave == chave_remover){
+                lista->cabeca = aux->prox;//elemento ta na propria cabeca da lista
+                break;
+            }else{
+                if(aux->chave == chave_remover){
+                    ant = aux;
+                    aux = aux->prox;
+                    break;
+                }
+                ant = aux;
+                aux = aux->prox;
+            }
+            if(aux == NULL){
+                cout <<" elemento nao removido pois nao tá na lista de adj" << endl;
+                break;
+            }
+        }
+    }
+    lista->n -= 1;
+}
+
 Grafo* criarGrafoVazio(int n_vertices){
     Grafo *novo_grafo = new Grafo;
     novo_grafo->n_vertices = n_vertices;
@@ -131,6 +181,11 @@ void conectarVerticesNaoDirecionado(Grafo *grafo, int index_v1, int index_v2, fl
 
     adicionaListaCauda(& (grafo->lista_adj[index_v1]), index_v2, peso);
     adicionaListaCauda(& (grafo->lista_adj[index_v2]), index_v1, peso);
+}
+
+void removerAresta(Grafo *grafo, int index_v1, int index_v2){
+    removerNoListaComChave(&grafo->lista_adj[index_v1], index_v2);
+    removerNoListaComChave(&grafo->lista_adj[index_v2], index_v1);
 }
 
 bool verificarAdjacencia(Grafo *grafo, int index_v1, int index_v2){
@@ -170,16 +225,47 @@ void printarListasAdjComPesos(Grafo *grafo){
 
 int* codigoPuffer(Grafo *grafo){
     int *pruffer = new int[grafo->n_vertices];
+    for(int i = 0; i< grafo->n_vertices; i++){
+        pruffer[i] = -1;
+    }
+    int *folhas_heap = new int[grafo->n_vertices];
+    int *grau_vertice = new int[grafo->n_vertices];
+    int cont_folhas = 0;
+    int cont = 0;//vai ser o indice do vetor de pruffer, que vai indicar a ordem de retirada das folhas
     for(int i = 0; i < grafo->n_vertices; i++){
         if(grafo->lista_adj[i].n == 1){//identificando os index do vertice folha;
-            construirHeapMin(vetor_heap, )
-
+            inserir(folhas_heap,cont_folhas,i);
+            printHeap(folhas_heap,cont_folhas);
         }
     }
+    construirHeapMin(folhas_heap,cont_folhas);
+    while(true){
+        int raiz_removida = remover(folhas_heap,cont_folhas);
+        construirHeapMin(folhas_heap,cont_folhas);
+        int elemento_adjacente = grafo->lista_adj[raiz_removida].cabeca->chave;
+        pruffer[cont] = elemento_adjacente;
+        removerAresta(grafo, elemento_adjacente,raiz_removida);
+        if(grafo->lista_adj[elemento_adjacente].n == 1){
+            inserir(folhas_heap,cont_folhas,elemento_adjacente);
+            construirHeapMin(folhas_heap,cont_folhas);
+            printHeap(folhas_heap,cont_folhas);
+        }
+        cout <<"remocao = " << cont << endl;
+        for(int i = 0; i < grafo->n_vertices - 2; i++){
+            cout << pruffer[i] << " ";
+        }
+        cout <<endl;
+        printHeap(folhas_heap,cont_folhas);
+        printarListasAdj(grafo);
+        cont += 1;
+
+    }
+
 }
 
 int main(int argc, char *argv[])
 {
+    cout <<"########## exemplo 1 " << endl;
     int n_vertices = 10;
     Grafo *novo_grafo = criarGrafoVazio(n_vertices);
 
@@ -197,6 +283,25 @@ int main(int argc, char *argv[])
 
     cout << "############################" <<endl;
 
+    //removerAresta(novo_grafo,0,2);
+    //printarListasAdj(novo_grafo);
+
+    int *pruffer = codigoPuffer(novo_grafo);
+
+//        cout <<"########## exemplo 2 " << endl;
+//        int n_vertices = 8;
+//        Grafo *novo_grafo = criarGrafoVazio(n_vertices);
+
+//        conectarVerticesNaoDirecionado(novo_grafo,1,6,1);
+//        conectarVerticesNaoDirecionado(novo_grafo,6,5,1);
+//        conectarVerticesNaoDirecionado(novo_grafo,6,0,1);
+//        conectarVerticesNaoDirecionado(novo_grafo,0,7,1);
+//        conectarVerticesNaoDirecionado(novo_grafo,0,3,1);
+//        conectarVerticesNaoDirecionado(novo_grafo,3,4,1);
+//        conectarVerticesNaoDirecionado(novo_grafo,3,2,1);
+
+//        printarListasAdj(novo_grafo);
+//        int *pruffer = codigoPuffer(novo_grafo);
 
 
 
